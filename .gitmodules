@@ -1,0 +1,3 @@
+[submodule "third_party/simple-graph"]
+	path = third_party/simple-graph
+	url = https://github.com/dpapathanasiou/simple-graph
