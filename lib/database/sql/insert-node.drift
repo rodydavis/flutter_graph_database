@@ -1,0 +1,3 @@
+import 'schema.drift';
+
+insertNode: INSERT INTO nodes VALUES(json(?));

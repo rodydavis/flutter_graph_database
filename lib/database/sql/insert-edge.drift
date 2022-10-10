@@ -1,0 +1,3 @@
+import 'schema.drift';
+
+insertEdge: INSERT INTO edges VALUES(?, ?, json(?));

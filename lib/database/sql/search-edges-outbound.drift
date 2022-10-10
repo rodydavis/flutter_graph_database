@@ -1,0 +1,3 @@
+import 'schema.drift';
+
+searchEdgesOutbound: SELECT * FROM edges WHERE target = ?;
