@@ -1,18 +1,15 @@
 import 'package:drift/drift.dart';
 
 import 'connection/connection.dart' as impl;
-import 'tables.dart';
 
 part 'database.g.dart';
 
 @DriftDatabase(include: {
-  // 'sql.drift',
   'sql/schema.drift',
   'sql/delete-edge.drift',
   'sql/delete-node.drift',
   'sql/insert-edge.drift',
   'sql/insert-node.drift',
-  'sql/update-node.drift',
   'sql/search-edges-inbound.drift',
   'sql/search-edges-outbound.drift',
   'sql/search-edges.drift',
@@ -24,6 +21,7 @@ part 'database.g.dart';
   'sql/traverse-with-bodies-outbound.drift',
   'sql/traverse-with-bodies.drift',
   'sql/traverse.drift',
+  'sql/update-node.drift',
 })
 class SqLiteDatabase extends _$SqLiteDatabase {
   SqLiteDatabase({

@@ -572,6 +572,15 @@ abstract class _$SqLiteDatabase extends GeneratedDatabase {
       'source_idx', 'CREATE INDEX IF NOT EXISTS source_idx ON edges (source)');
   late final Index targetIdx = Index(
       'target_idx', 'CREATE INDEX IF NOT EXISTS target_idx ON edges (target)');
+  Future<int> updateNode(String var1, String var2) {
+    return customUpdate(
+      'UPDATE nodes SET body = json(?1) WHERE id = ?2',
+      variables: [Variable<String>(var1), Variable<String>(var2)],
+      updates: {nodes},
+      updateKind: UpdateKind.update,
+    );
+  }
+
   Selectable<String?> traverse(String source) {
     return customSelect(
         'WITH RECURSIVE traverse(id) AS (SELECT ?1 UNION SELECT source FROM edges JOIN traverse ON target = id UNION SELECT target FROM edges JOIN traverse ON source = id) SELECT id FROM traverse',
@@ -639,11 +648,11 @@ abstract class _$SqLiteDatabase extends GeneratedDatabase {
     });
   }
 
-  Selectable<String?> traverseOutbound(String var1) {
+  Selectable<String?> traverseOutbound(String source) {
     return customSelect(
         'WITH RECURSIVE traverse(id) AS (SELECT ?1 UNION SELECT target FROM edges JOIN traverse ON source = id) SELECT id FROM traverse',
         variables: [
-          Variable<String>(var1)
+          Variable<String>(source)
         ],
         readsFrom: {
           edges,
@@ -711,15 +720,6 @@ abstract class _$SqLiteDatabase extends GeneratedDatabase {
     ], readsFrom: {
       edges,
     }).asyncMap(edges.mapFromRow);
-  }
-
-  Future<int> updateNode(String var1, String var2) {
-    return customUpdate(
-      'UPDATE nodes SET body = json(?1) WHERE id = ?2',
-      variables: [Variable<String>(var1), Variable<String>(var2)],
-      updates: {nodes},
-      updateKind: UpdateKind.update,
-    );
   }
 
   Future<int> insertNode(String var1) {
