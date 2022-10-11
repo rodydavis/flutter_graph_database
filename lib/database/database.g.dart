@@ -122,7 +122,7 @@ class Nodes extends Table with TableInfo<Nodes, Node> {
       type: DriftSqlType.string,
       requiredDuringInsert: false,
       $customConstraints:
-          'GENERATED ALWAYS AS (json_extract(body, \'\$.id\')) VIRTUAL NOT NULL UNIQUE');
+          'GENERATED ALWAYS AS (json_extract(body, \'\$.id\')) VIRTUAL NOT NULL UNIQUE PRIMARY KEY');
   @override
   List<GeneratedColumn> get $columns => [body, id];
   @override
@@ -145,7 +145,7 @@ class Nodes extends Table with TableInfo<Nodes, Node> {
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => <GeneratedColumn>{};
+  Set<GeneratedColumn> get $primaryKey => {id};
   @override
   Node map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
@@ -708,21 +708,21 @@ abstract class _$GraphDatabase extends GeneratedDatabase {
     }).asyncMap(edges.mapFromRow);
   }
 
-  Future<int> insertNode(String var1) {
+  Future<int> insertNode(String text) {
     return customInsert(
       'INSERT INTO nodes VALUES (json(?1))',
-      variables: [Variable<String>(var1)],
+      variables: [Variable<String>(text)],
       updates: {nodes},
     );
   }
 
-  Future<int> insertEdge(String? var1, String? var2, String var3) {
+  Future<int> insertEdge(String source, String target, String body) {
     return customInsert(
       'INSERT INTO edges VALUES (?1, ?2, json(?3))',
       variables: [
-        Variable<String>(var1),
-        Variable<String>(var2),
-        Variable<String>(var3)
+        Variable<String>(source),
+        Variable<String>(target),
+        Variable<String>(body)
       ],
       updates: {edges},
     );

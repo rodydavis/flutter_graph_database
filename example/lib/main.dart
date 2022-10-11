@@ -31,38 +31,22 @@ class Example extends StatefulWidget {
 
 class _ExampleState extends State<Example> {
   final database = db.GraphDatabase();
-  final graph = Graph();
-  final Algorithm builder = FruchtermanReingoldAlgorithm();
-  final nodeMap = <String, Node>{};
+  Graph graph = Graph();
+  Algorithm builder = FruchtermanReingoldAlgorithm();
+
   final nodes = <String, db.Node>{};
   bool loaded = false;
-
-  final exampleData = {
-    "nodes": [
-      {"id": '1', "label": 'circle'},
-      {"id": '2', "label": 'ellipse'},
-      {"id": '3', "label": 'database'},
-      {"id": '4', "label": 'box'},
-      {"id": '5', "label": 'diamond'},
-      {"id": '6', "label": 'dot'},
-      {"id": '7', "label": 'square'},
-      {"id": '8', "label": 'triangle'},
-    ],
-    "edges": [
-      {"from": '1', "to": '2'},
-      {"from": '2', "to": '3'},
-      {"from": '2', "to": '4'},
-      {"from": '2', "to": '5'},
-      {"from": '5', "to": '6'},
-      {"from": '5', "to": '7'},
-      {"from": '6', "to": '8'}
-    ]
-  };
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) => loadData());
+  }
+
+  @override
+  void reassemble() {
+    super.reassemble();
+    loadData();
   }
 
   void setLoadedState(bool value) {
@@ -76,15 +60,53 @@ class _ExampleState extends State<Example> {
   Future<void> addDummyData() async {
     // Load example data
     try {
-      await database.addGraphData(exampleData);
+      await database.deleteAll();
+      await database.addGraphData({
+        "nodes": [
+          {"id": '1', "label": 'circle'},
+          {"id": '2', "label": 'ellipse'},
+          {"id": '3', "label": 'database'},
+          {"id": '4', "label": 'box'},
+          {"id": '5', "label": 'diamond'},
+          {"id": '6', "label": 'dot'},
+          {"id": '7', "label": 'square'},
+          {"id": '8', "label": 'triangle'},
+          {"id": '9', "label": "star"},
+        ],
+        "edges": [
+          {"from": '1', "to": '2'},
+          {"from": '2', "to": '3'},
+          {"from": '2', "to": '4'},
+          {"from": '2', "to": '5'},
+          {"from": '5', "to": '6'},
+          {"from": '5', "to": '7'},
+          {"from": '6', "to": '8'},
+          {"from": '2', "to": '8'},
+          {"from": '1', "to": '8'},
+          {"from": '1', "to": '7'},
+          {"from": '1', "to": '6'},
+          {"from": '1', "to": '5'},
+          {"from": '1', "to": '4'},
+          {"from": '1', "to": '3'},
+          {"from": '1', "to": '9'},
+          {"from": '9', "to": '8'},
+          {"from": '9', "to": '5'},
+          {"from": '9', "to": '3'},
+        ]
+      });
+      loadData();
     } catch (e) {
       debugPrint('Error loading example data: $e');
     }
-    loadData();
   }
 
   Future<void> loadData() async {
     setLoadedState(false);
+
+    final nodeMap = <String, Node>{};
+    this.nodes.clear();
+    graph = Graph();
+    builder = FruchtermanReingoldAlgorithm();
 
     // Load graph data
     final nodes = await database.getAllNodes().get();
@@ -130,30 +152,38 @@ class _ExampleState extends State<Example> {
         title: const Text('Flutter Graph Database'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.add),
+            icon: const Icon(Icons.restore),
             onPressed: addDummyData,
           ),
         ],
       ),
       body: !loaded
           ? const Center(child: CircularProgressIndicator())
-          : nodeMap.isEmpty
+          : nodes.isEmpty
               ? const Center(child: Text('No Data Loaded'))
-              : InteractiveViewer(
-                  constrained: false,
-                  boundaryMargin: const EdgeInsets.all(100),
-                  minScale: 0.01,
-                  maxScale: 5.6,
-                  child: GraphView(
-                    graph: graph,
-                    algorithm: builder,
-                    paint: Paint()
-                      ..color = Colors.green
-                      ..strokeWidth = 1
-                      ..style = PaintingStyle.stroke,
-                    builder: buildNode,
-                  ),
-                ),
+              : LayoutBuilder(builder: (context, dimens) {
+                  return SizedBox.expand(
+                    child: InteractiveViewer(
+                      constrained: false,
+                      boundaryMargin: EdgeInsets.symmetric(
+                        horizontal: dimens.maxWidth * 0.75,
+                        vertical: dimens.maxHeight * 0.75,
+                      ),
+                      minScale: 0.01,
+                      maxScale: 5.6,
+                      child: GraphView(
+                        key: UniqueKey(),
+                        graph: graph,
+                        algorithm: builder,
+                        paint: Paint()
+                          ..color = Colors.green
+                          ..strokeWidth = 1
+                          ..style = PaintingStyle.stroke,
+                        builder: buildNode,
+                      ),
+                    ),
+                  );
+                }),
     );
   }
 }

@@ -1,4 +1,4 @@
 import 'schema.drift';
 
-insertNode: 
-    INSERT INTO nodes VALUES(json(?));
+insertNode(:body as TEXT): 
+    INSERT INTO nodes VALUES(json(:text));
