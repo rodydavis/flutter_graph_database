@@ -23,7 +23,7 @@ jobs:
           flutter config --enable-web
           flutter pub get
       - name: Build
-        run: cd example && flutter build web
+        run: cd example && flutter build web --base-href /flutter_graph_database/
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
