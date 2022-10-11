@@ -122,7 +122,7 @@ class Nodes extends Table with TableInfo<Nodes, Node> {
       type: DriftSqlType.string,
       requiredDuringInsert: false,
       $customConstraints:
-          'GENERATED ALWAYS AS (json_extract(body, \'\$.id\')) VIRTUAL NOT NULL UNIQUE PRIMARY KEY');
+          'GENERATED ALWAYS AS (json_extract(body, \'\$.id\')) VIRTUAL NOT NULL UNIQUE');
   @override
   List<GeneratedColumn> get $columns => [body, id];
   @override
@@ -145,7 +145,7 @@ class Nodes extends Table with TableInfo<Nodes, Node> {
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {id};
+  Set<GeneratedColumn> get $primaryKey => <GeneratedColumn>{};
   @override
   Node map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
