@@ -3,4 +3,4 @@
 	url = https://github.com/dpapathanasiou/simple-graph
 [submodule "third_party/drift"]
 	path = third_party/drift
-	url = https://github.com/simolus3/drift
+	url = https://github.com/rodydavis/moor
