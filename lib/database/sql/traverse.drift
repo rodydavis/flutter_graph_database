@@ -1,6 +1,7 @@
 import 'schema.drift';
 
-traverse: WITH RECURSIVE traverse(id) AS (
+traverse(:source AS TEXT): 
+  WITH RECURSIVE traverse(id) AS (
   SELECT :source
   UNION
   SELECT source FROM edges JOIN traverse ON target = id

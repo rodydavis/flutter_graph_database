@@ -1,6 +1,7 @@
-name: flutter_sqlite_graph_db
+name: flutter_graph_database
 description: A new Flutter package project.
 version: 0.0.1
+publish_to: none
 
 environment:
   sdk: ">=2.19.0-238.0.dev <3.0.0"
@@ -9,13 +10,15 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  drift: ^2.1.0
+  drift: # ^2.1.0
+    path: third_party/drift/drift
   sqlite3_flutter_libs: ^0.5.5
   http: ^0.13.5
   path_provider: ^2.0.0
   path: ^1.8.2
   sqlite3: ^1.7.0
-  drift_dev: ^2.1.0
+  drift_dev: # ^2.1.0
+    path: third_party/drift/drift_dev
 
 dev_dependencies:
   flutter_test:

@@ -1,6 +1,7 @@
 import 'schema.drift';
 
-traverseWithBodiesInbound: WITH RECURSIVE traverse(x, y, obj) AS (
+traverseWithBodiesInbound(:source AS TEXT): 
+  WITH RECURSIVE traverse(x, y, obj) AS (
   SELECT :source, '()', '{}'
   UNION
   SELECT id, '()', body FROM nodes JOIN traverse ON id = x

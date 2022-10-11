@@ -1,3 +1,4 @@
 import 'schema.drift';
 
-insertNode: INSERT INTO nodes VALUES(json(?));
+insertNode: 
+    INSERT INTO nodes VALUES(json(?));

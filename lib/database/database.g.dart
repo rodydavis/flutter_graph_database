@@ -17,14 +17,12 @@ class Node extends DataClass implements Insertable<Node> {
     if (!nullToAbsent || body != null) {
       map['body'] = Variable<String>(body);
     }
-    map['id'] = Variable<String>(id);
     return map;
   }
 
   NodesCompanion toCompanion(bool nullToAbsent) {
     return NodesCompanion(
       body: body == null && nullToAbsent ? const Value.absent() : Value(body),
-      id: Value(id),
     );
   }
 
@@ -69,29 +67,23 @@ class Node extends DataClass implements Insertable<Node> {
 
 class NodesCompanion extends UpdateCompanion<Node> {
   final Value<String?> body;
-  final Value<String> id;
   const NodesCompanion({
     this.body = const Value.absent(),
-    this.id = const Value.absent(),
   });
   NodesCompanion.insert({
     this.body = const Value.absent(),
-    required String id,
-  }) : id = Value(id);
+  });
   static Insertable<Node> custom({
     Expression<String>? body,
-    Expression<String>? id,
   }) {
     return RawValuesInsertable({
       if (body != null) 'body': body,
-      if (id != null) 'id': id,
     });
   }
 
-  NodesCompanion copyWith({Value<String?>? body, Value<String>? id}) {
+  NodesCompanion copyWith({Value<String?>? body}) {
     return NodesCompanion(
       body: body ?? this.body,
-      id: id ?? this.id,
     );
   }
 
@@ -101,17 +93,13 @@ class NodesCompanion extends UpdateCompanion<Node> {
     if (body.present) {
       map['body'] = Variable<String>(body.value);
     }
-    if (id.present) {
-      map['id'] = Variable<String>(id.value);
-    }
     return map;
   }
 
   @override
   String toString() {
     return (StringBuffer('NodesCompanion(')
-          ..write('body: $body, ')
-          ..write('id: $id')
+          ..write('body: $body')
           ..write(')'))
         .toString();
   }
@@ -132,7 +120,7 @@ class Nodes extends Table with TableInfo<Nodes, Node> {
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
       'id', aliasedName, false,
       type: DriftSqlType.string,
-      requiredDuringInsert: true,
+      requiredDuringInsert: false,
       $customConstraints:
           'GENERATED ALWAYS AS (json_extract(body, \'\$.id\')) VIRTUAL NOT NULL UNIQUE');
   @override
@@ -152,8 +140,6 @@ class Nodes extends Table with TableInfo<Nodes, Node> {
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
     }
     return context;
   }
@@ -551,9 +537,9 @@ class Edges extends Table with TableInfo<Edges, Edge> {
   bool get dontWriteConstraints => true;
 }
 
-abstract class _$SqLiteDatabase extends GeneratedDatabase {
-  _$SqLiteDatabase(QueryExecutor e) : super(e);
-  _$SqLiteDatabase.connect(DatabaseConnection c) : super.connect(c);
+abstract class _$GraphDatabase extends GeneratedDatabase {
+  _$GraphDatabase(QueryExecutor e) : super(e);
+  _$GraphDatabase.connect(DatabaseConnection c) : super.connect(c);
   late final Nodes nodes = Nodes(this);
   late final NodeEntries nodeEntries = NodeEntries(this);
   late final Trigger nodesInsert = Trigger(
@@ -758,6 +744,18 @@ abstract class _$SqLiteDatabase extends GeneratedDatabase {
       updates: {edges},
       updateKind: UpdateKind.delete,
     );
+  }
+
+  Selectable<Node> getAllNodes() {
+    return customSelect('SELECT * FROM nodes', variables: [], readsFrom: {
+      nodes,
+    }).asyncMap(nodes.mapFromRow);
+  }
+
+  Selectable<Edge> getAllEdges() {
+    return customSelect('SELECT * FROM edges', variables: [], readsFrom: {
+      edges,
+    }).asyncMap(edges.mapFromRow);
   }
 
   @override
