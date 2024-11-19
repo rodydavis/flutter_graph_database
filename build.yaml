@@ -17,7 +17,6 @@ targets:
               modules:
                 - json1
                 - fts5
-          generate_connect_constructor: true
           apply_converters_on_variables: true
           generate_values_in_copy_with: true
           scoped_dart_components: true

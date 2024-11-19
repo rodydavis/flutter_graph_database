@@ -1,9 +1,8 @@
 import 'dart:convert';
 
 import 'package:drift/drift.dart';
+import 'package:drift_flutter/drift_flutter.dart';
 import 'package:flutter/foundation.dart';
-
-import 'connection/connection.dart' as impl;
 
 part 'database.g.dart';
 
@@ -28,19 +27,9 @@ part 'database.g.dart';
   'sql/update-node.drift',
 })
 class GraphDatabase extends _$GraphDatabase {
-  GraphDatabase({
-    String dbName = 'graph_db.db',
-    DatabaseConnection? connection,
-    bool useWebWorker = false,
-    bool logStatements = false,
-  }) : super.connect(
-          connection ??
-              impl.connect(
-                dbName,
-                useWebWorker: useWebWorker,
-                logStatements: logStatements,
-              ),
-        );
+  GraphDatabase(super.e);
+
+  GraphDatabase.name(String name) : super(driftDatabase(name: name));
 
   @override
   int get schemaVersion => 1;
@@ -60,7 +49,7 @@ class GraphDatabase extends _$GraphDatabase {
             final current = await searchNodeById(id).getSingleOrNull();
             final body = jsonEncode(node);
             if (current != null) {
-              await updateNode(id, body);
+              await updateNode(body, id);
             } else {
               await insertNode(body);
             }

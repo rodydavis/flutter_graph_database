@@ -4,26 +4,21 @@ version: 0.0.1
 publish_to: none
 
 environment:
-  sdk: ">=2.19.0-238.0.dev <3.0.0"
+  sdk: ">=3.0.0 <4.0.0"
   flutter: ">=1.17.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  drift: # ^2.1.0
-    path: third_party/drift/drift
-  sqlite3_flutter_libs: ^0.5.5
+  drift: ^2.8.2
   http: ^0.13.5
-  path_provider: ^2.0.0
-  path: ^1.8.2
-  sqlite3: ^1.7.0
+  drift_flutter: ^0.2.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.0
-  build_runner: ^2.2.0
-  drift_dev: # ^2.1.0
-    path: third_party/drift/drift_dev
+  flutter_lints: ^3.0.0
+  drift_dev: ^2.8.3
+  build_runner: ^2.4.13
 
 flutter:

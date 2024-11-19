@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_graph_database/flutter_graph_database.dart' as db;
 import 'package:graphview/GraphView.dart';
@@ -23,14 +24,14 @@ class MyApp extends StatelessWidget {
 }
 
 class Example extends StatefulWidget {
-  const Example({Key? key}) : super(key: key);
+  const Example({super.key});
 
   @override
   State<Example> createState() => _ExampleState();
 }
 
 class _ExampleState extends State<Example> {
-  final database = db.GraphDatabase();
+  final database = db.GraphDatabase(NativeDatabase.memory());
   Graph graph = Graph();
   Algorithm builder = FruchtermanReingoldAlgorithm();
 
@@ -63,15 +64,42 @@ class _ExampleState extends State<Example> {
       await database.deleteAll();
       await database.addGraphData({
         "nodes": [
-          {"id": '1', "label": 'circle'},
-          {"id": '2', "label": 'ellipse'},
-          {"id": '3', "label": 'database'},
-          {"id": '4', "label": 'box'},
-          {"id": '5', "label": 'diamond'},
-          {"id": '6', "label": 'dot'},
-          {"id": '7', "label": 'square'},
-          {"id": '8', "label": 'triangle'},
-          {"id": '9', "label": "star"},
+          {
+            "id": '1',
+            "label": 'circle',
+          },
+          {
+            "id": '2',
+            "label": 'ellipse',
+          },
+          {
+            "id": '3',
+            "label": 'database',
+          },
+          {
+            "id": '4',
+            "label": 'box',
+          },
+          {
+            "id": '5',
+            "label": 'diamond',
+          },
+          {
+            "id": '6',
+            "label": 'dot',
+          },
+          {
+            "id": '7',
+            "label": 'square',
+          },
+          {
+            "id": '8',
+            "label": 'triangle',
+          },
+          {
+            "id": '9',
+            "label": "star",
+          },
         ],
         "edges": [
           {"from": '1', "to": '2'},

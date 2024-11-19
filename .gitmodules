@@ -1,6 +1,0 @@
-[submodule "third_party/simple-graph"]
-	path = third_party/simple-graph
-	url = https://github.com/dpapathanasiou/simple-graph
-[submodule "third_party/drift"]
-	path = third_party/drift
-	url = https://github.com/rodydavis/moor
